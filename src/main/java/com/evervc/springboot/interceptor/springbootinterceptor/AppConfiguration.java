@@ -16,6 +16,11 @@ public class AppConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(timeInterceptor);
+        // Añadiendo rutas donde se desea usar el interceptor HTTP
+        //registry.addInterceptor(timeInterceptor).addPathPatterns("/api/foo", "api/bar");
+        // Añadiendo una ruta base donde se desea usar el interceptor HTTP (todas las de la api)
+        //registry.addInterceptor(timeInterceptor).addPathPatterns("/api/**");
+        // Excluyendo rutas donde no usar el interceptor HTTP
+        registry.addInterceptor(timeInterceptor).excludePathPatterns("/api/bar");
     }
 }
