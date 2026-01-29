@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import tools.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Component("timeInterceptor")
@@ -30,8 +33,20 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
         Random random = new Random();
         int delay = random.nextInt(500);
         Thread.sleep(delay);
+        //return true;
 
-        return true;
+        // Personalizando response en caso de no completarse alguna acción
+        // puede usarse para validar que si alguien no se ha loggeado se retorne false y el mensaje
+        Map<String, String> json = new HashMap<>();
+        json.put("message", "No se ha completado el request");
+        json.put("error", "Error 500");
+
+        ObjectMapper maper = new ObjectMapper();
+        String jsonStr = maper.writeValueAsString(json);
+        response.setContentType("applicarion/json");
+        response.setStatus(500);
+        response.getWriter().write(jsonStr);
+        return false;
     }
 
     @Override
